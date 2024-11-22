@@ -50,8 +50,15 @@ app.get('/collections/:collectionName', function(req, res, next) {
     });
 });
 
-//Logger middleware: Logs all incoming requests
+// Logger middleware: Logs all incoming requests
 app.use(morgan("short"));
+
+// Static file middleware: Return the file image specified by the request url
+var staticPath = path.join(__dirname, "static/images");
+app.use("/images", express.static(staticPath, {
+    // If the file is not found or an error occurs, pass to the next middleware
+    fallthrough: true
+}));
 
 
 // Error handler
