@@ -3,6 +3,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require('express');
 const cors = require('cors');
 const path = require("path");
+const morgan = require("morgan");
 const propertiesReader = require("properties-reader");
 const apiRouter = require('./routes/api_router.js');
 
@@ -48,6 +49,9 @@ app.get('/collections/:collectionName', function(req, res, next) {
         res.send(results);
     });
 });
+
+//Logger middleware: Logs all incoming requests
+app.use(morgan("short"));
 
 
 // Error handler
