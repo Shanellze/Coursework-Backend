@@ -50,6 +50,48 @@ app.get('/collections/:collectionName', function(req, res, next) {
     });
 });
 
+// POST Route to create a document from a specified collection
+app.post('/collections/:collectionName', function(req, res, next) {
+    
+    req.collection.insertOne(req.body, function(err, results) {
+    if (err) {
+        return next(err);
+    }
+    res.send(results);
+    });
+});
+
+// DELETE Route to delete a document from a specified collection
+app.delete('/collections/:collectionName/:id', function(req, res, next) {
+    req.collection.deleteOne({_id: new ObjectId(req.params.id)}, function(err, result) {
+        if (err) {
+            return next(err);
+        } else {
+            res.send((result.deletedCount === 1) ? {msg: "success"} : {msg: "error"});
+        }
+    });
+});
+
+// PUT Route to update a document from a specified collection
+app.put('/collections/:collectionName/:id', function(req, res, next) {
+    
+    req.collection.updateOne(
+        {_id: new ObjectId(req.params.id)},
+        {$set: req.body},
+        {safe: true, multi: false}, function(err, result) {
+            if (err) {
+                return next(err);
+            } else {
+                res.send((result.matchedCount === 1) ? {msg: "success"} : {msg: "error"});
+            }
+        }
+    );
+});
+
+
+
+
+    
 // Logger middleware: Logs all incoming requests
 app.use(morgan("short"));
 
