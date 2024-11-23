@@ -5,14 +5,12 @@ const cors = require('cors');
 const path = require("path");
 const morgan = require("morgan");
 const propertiesReader = require("properties-reader");
-const apiRouter = require('./routes/api_router.js');
 
 const app = express();
 
 // Middleware setup
 app.use(express.json());
 app.use(cors());
-app.use('/api', apiRouter); 
 
 // Load database configuration from properties file
 let propertiesPath = path.resolve(__dirname, "conf/db.properties");
