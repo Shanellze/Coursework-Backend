@@ -87,7 +87,29 @@ app.put('/collections/:collectionName/:id', function(req, res, next) {
 });
 
 
+// GET Route to handle search requests
+app.get('/search', async (req, res) => {
+    const { query } = req.query;
+    const queryAsInt = parseInt(query, 10);
 
+    try {
+        const filter = {};
+
+        if (query) {
+            filter.$or = [
+                { subject: { $regex: query, $options: 'i' } },
+                { location: { $regex: query, $options: 'i' } },
+                { price: queryAsInt },
+                { availability: queryAsInt }
+            ];
+        }
+        const lessons = await db.collection('products').find(filter).toArray();
+        res.json(lessons);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
     
 // Logger middleware: Logs all incoming requests
