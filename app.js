@@ -31,12 +31,12 @@ const uri = dbPprefix + dbUsername + ":" + dbPwd + dbUrl + dbParams;
 const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 });
 let db = client.db(dbName);
 
+
 // Middleware to handle collection name
 app.param('collectionName', function(req, res, next, collectionName) {
     req.collection = db.collection(collectionName);
     return next();
 });
-
 
 // GET Route to retrieve all documents from a specified collection
 app.get('/collections/:collectionName', function(req, res, next) {
@@ -49,8 +49,7 @@ app.get('/collections/:collectionName', function(req, res, next) {
 });
 
 // POST Route to create a document from a specified collection
-app.post('/collections/:collectionName', function(req, res, next) {
-    
+app.post('/collections/:collectionName', function(req, res, next) {   
     req.collection.insertOne(req.body, function(err, results) {
     if (err) {
         return next(err);
@@ -59,20 +58,8 @@ app.post('/collections/:collectionName', function(req, res, next) {
     });
 });
 
-// DELETE Route to delete a document from a specified collection
-app.delete('/collections/:collectionName/:id', function(req, res, next) {
-    req.collection.deleteOne({_id: new ObjectId(req.params.id)}, function(err, result) {
-        if (err) {
-            return next(err);
-        } else {
-            res.send((result.deletedCount === 1) ? {msg: "success"} : {msg: "error"});
-        }
-    });
-});
-
 // PUT Route to update a document from a specified collection
-app.put('/collections/:collectionName/:id', function(req, res, next) {
-    
+app.put('/collections/:collectionName/:id', function(req, res, next) { 
     req.collection.updateOne(
         {_id: new ObjectId(req.params.id)},
         {$set: req.body},
